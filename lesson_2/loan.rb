@@ -55,7 +55,7 @@ loop do
     prompt(MESSAGES['apr'])
     apr = gets.chomp
 
-    if number?(apr)
+    if number?(apr) && positive?(apr)
       break
     else
       prompt(MESSAGES['invalid'])
@@ -67,7 +67,7 @@ loop do
     prompt(MESSAGES['duration_years'])
     loan_years = gets.chomp
 
-    if integer?(loan_years)
+    if integer?(loan_years) && positive?(loan_years)
       break
     else
       prompt(MESSAGES['years_invalid'])
