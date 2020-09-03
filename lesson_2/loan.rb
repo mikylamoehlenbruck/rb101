@@ -74,7 +74,7 @@ loop do
     end
   end
 
-  monthly_interest_rate = ((apr.to_f / 100) / 12).round(2)
+  monthly_interest_rate = ((apr.to_f / 100) / 12)
   loan_months = loan_years.to_i * 12
 
   monthly_calculation = loan_amount.to_i *
