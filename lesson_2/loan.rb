@@ -1,19 +1,9 @@
-=begin
-  Collect information from the user for:
-    -loan amount
-    -APR
-    -loan duration
-
-  Then, caluclate:
-    -monthly interest rate
-    -loan duration in months
-    -monthly payment
-
-  Finally, print out the user's monthly payment
-=end
-
 require 'yaml'
 MESSAGES = YAML.load_file('loan_messages.yml')
+
+def clear_system
+  system 'clear'
+end
 
 def prompt(message)
   puts "=> #{message}"
@@ -35,61 +25,101 @@ def positive?(input)
   input.to_i > 0
 end
 
-prompt(MESSAGES['welcome'])
+def display_welcome
+  prompt(MESSAGES['welcome'])
+end
 
-loop do
+def retrieve_loan_amount
+  prompt(MESSAGES['loan_amount'])
   loan_amount = ""
+
   loop do
-    prompt(MESSAGES['loan_amount'])
     loan_amount = gets.chomp
-
-    if number?(loan_amount) && positive?(loan_amount)
-      break
-    else
-      prompt(MESSAGES['invalid'])
-    end
+    break if number?(loan_amount) && positive?(loan_amount)
+    prompt(MESSAGES['invalid'])
   end
+  loan_amount
+end
 
+def retrieve_apr_amount
+  prompt(MESSAGES['apr'])
   apr = ""
+
   loop do
-    prompt(MESSAGES['apr'])
     apr = gets.chomp
-
-    if number?(apr) && positive?(apr)
-      break
-    else
-      prompt(MESSAGES['invalid'])
-    end
+    break if number?(apr) && positive?(apr)
+    prompt(MESSAGES['invalid'])
   end
+  apr
+end
 
+def retrieve_loan_years_amount
+  prompt(MESSAGES['duration_years'])
   loan_years = ""
+
   loop do
-    prompt(MESSAGES['duration_years'])
     loan_years = gets.chomp
-
-    if integer?(loan_years) && positive?(loan_years)
-      break
-    else
-      prompt(MESSAGES['years_invalid'])
-    end
+    break if integer?(loan_years) && positive?(loan_years)
+    prompt(MESSAGES['years_invalid'])
   end
+  loan_years
+end
 
-  monthly_interest_rate = ((apr.to_f / 100) / 12)
-  loan_months = loan_years.to_i * 12
+def calculate_monthly_interest_rate(apr)
+  (apr.to_f / 100) / 12
+end
 
-  monthly_calculation = loan_amount.to_i *
-                        (monthly_interest_rate /
-                        (1 - (1 + monthly_interest_rate)**(-loan_months.to_i)))
+def calculate_loan_months(input)
+  input.to_i * 12
+end
 
-  monthly_payment = monthly_calculation.round(2)
-  prompt(MESSAGES['monthly_payment'] + "$#{monthly_payment}")
+def calculate_monthly_payment(amount, rate, duration)
+  (amount.to_i * (rate / (1 - (1 + rate)**(-duration.to_i)))).round(2)
+end
 
+def display_monthly_payment(payment)
+  prompt(MESSAGES['monthly_payment'] + "$#{payment}")
+end
+
+def calculate_again
   prompt(MESSAGES['again'])
-  answer = gets.chomp
+  answer = ""
 
-  unless answer.downcase == 'y'
+  loop do
+    answer = gets.chomp.downcase
+    break if %w(y yes n no).include?(answer)
+    prompt(MESSAGES['invalid_answer'])
+  end
+  answer
+end
+
+def display_goodbye
+  prompt(MESSAGES['thank_you'])
+end
+
+clear_system
+
+display_welcome
+loop do
+  loan_amount = retrieve_loan_amount
+  apr = retrieve_apr_amount
+  loan_years = retrieve_loan_years_amount
+
+  monthly_interest_rate = calculate_monthly_interest_rate(apr)
+  loan_months = calculate_loan_months(loan_years)
+
+  monthly_payment = calculate_monthly_payment(
+    loan_amount,
+    monthly_interest_rate,
+    loan_months
+  )
+
+  display_monthly_payment(monthly_payment)
+
+  answer = calculate_again
+  unless answer == ('y' && 'yes')
     break
   end
 end
 
-prompt(MESSAGES['thank_you'])
+display_goodbye
