@@ -126,10 +126,10 @@ scores = {
 loop do
   player_choice = ''
   computer_choice = ''
+
   loop do
     choice = retrieve_player_choice
     computer_choice = VALID_CHOICES.sample
-
     player_choice = convert_choices(choice)
 
     display_choices(player_choice, computer_choice)
