@@ -65,13 +65,11 @@ def display_choices(player, computer)
 end
 
 def calculate_winner(first_player, second_player)
-  first_player
   if win?(first_player, second_player)
     first_player = 1
   else
     first_player = 0
   end
-  first_player
 end
 
 def display_results(player, computer)
