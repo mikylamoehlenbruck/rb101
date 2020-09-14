@@ -1,4 +1,5 @@
 welcome: "Welcome to "
+target_points: "First to 5 points wins the game!"
 choose_one: "Please choose one:"
 choices: "r: rock; p: paper; s: scissors; l: lizard; $: spock"
 invalid_entry: "Oops, that's not a valid choice"
