@@ -64,7 +64,7 @@ def display_choices(player, computer)
   puts(MESSAGES['computer_choice'] + " #{computer}")
 end
 
-def calculate_winner(first_player, second_player)
+def calculate_score(first_player, second_player)
   if win?(first_player, second_player)
     first_player = 1
   else
@@ -72,21 +72,26 @@ def calculate_winner(first_player, second_player)
   end
 end
 
-def display_results(player, computer)
-  if player > computer
-    prompt(MESSAGES['player_win'])
-  elsif computer > player
-    prompt(MESSAGES['computer_win'])
-  else
-    prompt(MESSAGES['tie'])
+def calculate_winner(first_player, second_player)
+  if first_player == 1
+    first_player = 'player'
+  elsif second_player == 1
+    second_player = 'computer'
   end
 end
 
-def update_score(player, computer, hash_scores)
-  if player > computer
-    hash_scores[:player_score] += 1
-  elsif computer > player
-    hash_scores[:computer_score] += 1
+def display_results(winner)
+  case winner
+  when 'player' then prompt(MESSAGES['player_win'])
+  when 'computer' then prompt(MESSAGES['computer_win'])
+  else prompt(MESSAGES['tie'])
+  end
+end
+
+def update_score(winner, hash_scores)
+  case winner
+  when 'player' then hash_scores[:player_score] += 1
+  when 'computer' then hash_scores[:computer_score] += 1
   end
 end
 
@@ -152,12 +157,13 @@ loop do
 
     display_choices(player_choice, computer_choice)
 
-    player_score = calculate_winner(player_choice, computer_choice)
-    computer_score = calculate_winner(computer_choice, player_choice)
+    player_score = calculate_score(player_choice, computer_choice)
+    computer_score = calculate_score(computer_choice, player_choice)
+    winner = calculate_winner(player_score, computer_score)
 
-    display_results(player_score, computer_score)
+    display_results(winner)
 
-    update_score(player_score, computer_score, scores)
+    update_score(winner, scores)
 
     display_score(scores)
     pause_and_clear
